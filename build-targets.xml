@@ -1,0 +1,74 @@
+<project>
+  <property file="../build.properties" />
+
+  <path id="project.classpath">
+    <pathelement location="build/classes" />
+    <fileset dir="${scala.home}/lib/">
+      <include name="*.jar" />
+    </fileset>
+    <fileset dir="/usr/share/java/">
+      <include name="*.jar" />
+    </fileset>
+    <fileset dir="../lib/">
+      <include name="*.jar" />
+    </fileset>
+  </path>
+
+  <taskdef resource="scala/tools/ant/antlib.xml">
+    <classpath refid="project.classpath">
+    </classpath>
+  </taskdef>
+
+  <taskdef name="scalatest"
+           classname="org.scalatest.tools.ScalaTestAntTask">
+    <classpath refid="project.classpath" />
+  </taskdef>
+
+  <target name="init">
+    <mkdir dir="build/classes" />
+    <mkdir dir="build-test" />
+  </target>
+
+  <target name="clean">
+    <delete includeEmptyDirs="true">
+      <fileset dir="build"/>
+      <fileset dir="build-test"/>
+    </delete>
+  </target>
+
+  <target name="test" depends="compile-test">
+    <scalatest haltonfailure="false" fork="false">
+      <runpath>
+        <pathelement path="project.classpath" />
+        <pathelement location="build-test" />
+      </runpath>
+      <wildcard package="${tests-wildcard}" />
+      <reporter type="stdout" />
+    </scalatest>
+  </target>
+
+  <target name="compile-test" depends="compile">
+    <scalac srcdir="test"
+            destdir="build-test"
+            classpathref="project.classpath"
+            force="false">
+      <include name="**/*.scala" />
+    </scalac>
+  </target>
+
+  <target name="compile" depends="init">
+    <scalac srcdir="src"
+            destdir="build/classes"
+            classpathref="project.classpath"
+            force="false">
+      <include name="**/*.scala" />
+    </scalac>
+    <jar destfile="build/${jar.name}" basedir="build/classes">
+      <manifest>
+        <attribute name="Main-Class" value="${jar.class}" />
+        <attribute name="Class-Path" value="${scala.home}/lib/scala-library.jar" />
+      </manifest>
+    </jar>
+  </target>
+
+</project>
