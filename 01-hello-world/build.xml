@@ -1,0 +1,5 @@
+<project default="compile">
+  <property name="jar.name" value="helloworld.jar" />
+  <property name="jar.class" value="HelloWorld" />
+  <import file="../build-targets.xml" />
+</project>
