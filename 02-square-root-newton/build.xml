@@ -1,0 +1,5 @@
+<project default="compile">
+  <property name="jar.name" value="squareroot.jar" />
+  <property name="jar.class" value="SquareRoot" />
+  <import file="../build-targets.xml" />
+</project>
